@@ -1,0 +1,57 @@
+const passport = require('passport');
+const User = require('../models/User');
+
+exports.postSignUp = (req, res, next) => {
+    const newUser = new User({
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password
+    });
+
+    // Verify user has UM email syntax
+    const emailRegex = /[a-zA-Z0-9]+@((correo.)?(um.))+edu.uy/;
+    if (!emailRegex.test(newUser.email)) {
+        return res.status(400).send('Ese email no pertenece a la UM.');
+    }
+
+    // Verify user does not exists in database
+    User.findOne({email: req.body.email}).then(userExists => {
+        if (userExists) {
+            return res.status(400).send('Ese email esta registrado.');
+        }
+        newUser.save().then(() => {
+            req.logIn(newUser, (err) => {
+                if (err) {
+                    next(err);
+                }
+                res.send('Usuario creado exitosamente');
+            })
+        }).catch((err) => next(err));
+    }).catch(err => res.send(500).send('Ocurrio un problema inesperado.'))
+}
+
+exports.postLogin = (req, res, next) => {
+    passport.authenticate('local', (err, user, info) => {
+        if (err) {
+            next(err);
+        }
+        if (!user) {
+            return res.status(400).send('Email o contraseña no válidos');
+        }
+        req.logIn(user, (err) => {
+            if (err) {
+                next(err);
+            }
+            res.send('Login exitoso');
+        })
+    })(req, res, next);
+}
+
+exports.logout = (req, res) => {
+    req.logout(function (err) {
+        if (err) { 
+            return next(err); 
+        }
+    });
+    res.send('Logout exitoso.');
+}
