@@ -18,7 +18,7 @@ passport.use(new LocalStrategy(
     {usernameField: 'email'},
     (email, password, done) => {
         User.findOne({email}).then((user) => {
-            if (!usuario) {
+            if (!user) {
                 return done(null, false, {message: `Este email: ${email} no esta registrado`});
             } else {
                 user.comparePassword(password, (err, theyMatch) => {
