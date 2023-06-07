@@ -55,16 +55,4 @@ app.post('/signup', userController.postSignUp);
 app.post('/login', userController.postLogin);
 app.get('/logout', passportConfig.isAuthenticated, userController.logout);
 
-
-
-// User controls
-const userController = require('./controllers/user');
-app.post('/signup', userController.postSignUp);
-app.post('/login', userController.postLogin);
-app.get('/logout', passportConfig.isAuthenticated, userController.logout);
-
-app.get('/userInfo', passportConfig.isAuthenticated, (req, res) => {
-    res.json(req.user);
-})
-
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
