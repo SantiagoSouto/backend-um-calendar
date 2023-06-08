@@ -1,12 +1,14 @@
 const passport = require('passport');
 const User = require('../models/User');
 const Subject = require('../models/Subject');
+const { isAdmin } = require('../config/passport');
 
 exports.postSignUp = (req, res, next) => {
     const newUser = new User({
         name: req.body.name,
         email: req.body.email,
-        password: req.body.password
+        password: req.body.password,
+        isAdmin: req.body.isAdmin ? true : false
     });
 
     // Verify user has UM email syntax
@@ -67,4 +69,13 @@ exports.putSubject = (req, res) => {
         req.user.save();
         res.json(req.user);
     })
+}
+
+exports.getAllSubjects = (req, res) => {
+    const subjects = [];
+    const promises = req.user.subjects.map(subject => Subject.findById(subject));
+    Promise.all(promises).then(foundSubjects => {
+        subjects.push(...foundSubjects);
+        res.send(subjects);
+    }).catch(err => res.status(500).send('Ocurrio un error.'));
 }

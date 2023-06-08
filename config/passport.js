@@ -39,3 +39,10 @@ exports.isAuthenticated = (req, res, next) => {
     }
     res.status(401).send('Tienes que hacer login para acceder a este recurso.');
 }
+
+exports.isAdmin = (req, res, next) => {
+    if (req.user.isAdmin) {
+        return next();
+    }
+    res.status(403).send('Tienes que ser administrador para acceder a este recurso.');
+}

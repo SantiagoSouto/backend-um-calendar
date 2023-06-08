@@ -6,7 +6,8 @@ const userSchema = new Schema({
     name: {type: String, required: true},
     email: {type: String, unique: true, lowercase: true, required: true},
     password: {type: String, required: true},
-    subjects: {type: [Schema.Types.ObjectId], default: []}
+    subjects: {type: [Schema.Types.ObjectId], default: []},
+    isAdmin: {type: Boolean, default: false}
 }, {
     timestamps: true
 })
