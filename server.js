@@ -9,7 +9,11 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const passportConfig = require('./config/passport.js');
+
+// Routers
 const userRouter = require('./router/user.js');
+const subjectRouter = require('./router/subject.js');
+const eventRouter = require('./router/event.js');
 
 dotenv.config();
 
@@ -46,13 +50,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
 
-// User Router
-app.use('/user', passportConfig.isAuthenticated, userRouter);
-
-// User controls
-const userController = require('./controllers/user');
-app.post('/signup', userController.postSignUp);
-app.post('/login', userController.postLogin);
-app.get('/logout', passportConfig.isAuthenticated, userController.logout);
+// Routers
+app.use('/user', userRouter);
+app.use('/subject', passportConfig.isAuthenticated, subjectRouter);
+app.use('/event', passportConfig.isAuthenticated, eventRouter);
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));

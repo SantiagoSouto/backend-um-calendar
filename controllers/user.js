@@ -1,5 +1,6 @@
 const passport = require('passport');
 const User = require('../models/User');
+const Subject = require('../models/Subject');
 
 exports.postSignUp = (req, res, next) => {
     const newUser = new User({
@@ -54,4 +55,16 @@ exports.logout = (req, res) => {
         }
     });
     res.send('Logout exitoso.');
+}
+
+exports.putSubject = (req, res) => {
+    const subjectName = req.params.name;
+    Subject.findOne({name: subjectName}).then(subject => {
+        if (subject == null) {
+            res.status(404).send(`${subjectName} no se ingreso como materia al sistema.`);
+        }
+        req.user.subjects = [...req.user.subjects, subject._id];
+        req.user.save();
+        res.json(req.user);
+    })
 }

@@ -43,9 +43,4 @@ userSchema.methods.comparePassword = function (password, callback) {
     })
 }
 
-userSchema.methods.addSubject = function (subject, callback) {
-    this.subjects = [...this.subjects, subject];
-    this.save().then(() => callback(null, 'Success'));
-}
-
 module.exports = mongoose.model('User', userSchema);
