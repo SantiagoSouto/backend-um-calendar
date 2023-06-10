@@ -15,7 +15,7 @@ exports.postCreateEvent = ((req, res, next) => {
         // Verify event is not duplicated
         Event.findOne({date: date, eventType: req.body.type, subject: subject._id}).then(eventExists => {
             if (eventExists) {
-                res.status(400).send('Esta materia ya tiene este evento agregado')
+                res.status(409).send('Esta materia ya tiene este evento agregado')
             }
             const newEvent = new Event({
                 name: req.body.name,

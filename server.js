@@ -1,19 +1,23 @@
-const express = require('express');
-const session = require('express-session');
-const helmet = require('helmet');
-const RateLimit = require('express-rate-limit');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const MongoStore = require('connect-mongo');
-const dotenv = require('dotenv');
-const mongoose = require('mongoose');
-const passport = require('passport');
-const passportConfig = require('./config/passport.js');
+const express = require('express'),
+    session = require('express-session'),
+    bodyParser = require('body-parser'),
+    helmet = require('helmet'),
+    RateLimit = require('express-rate-limit'),
+    cors = require('cors'),
+    swaggerJsdoc = require('swagger-jsdoc'),
+    swaggerUi = require('swagger-ui-express'),
+    MongoStore = require('connect-mongo'),
+    dotenv = require('dotenv'),
+    mongoose = require('mongoose'),
+    passport = require('passport'),
+    passportConfig = require('./config/passport.js');
+
+
 
 // Routers
-const userRouter = require('./router/user.js');
-const subjectRouter = require('./router/subject.js');
-const eventRouter = require('./router/event.js');
+const userRouter = require('./routes/user.js');
+const subjectRouter = require('./routes/subject.js');
+const eventRouter = require('./routes/event.js');
 
 dotenv.config();
 
@@ -49,6 +53,37 @@ app.use(passport.session());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
+
+// Docs
+app.use(express.static('assets'));
+const options = {
+    definition: {
+      openapi: "3.0.0",
+      info: {
+        title: "UM Calendar API",
+        version: "1.0.0",
+        description:
+          "Este es el servidor API que utilizará la aplicacion de UM Calendar.",
+      },
+      servers: [
+        {
+          url: "https://um-calendar.onrender.com",
+        },
+      ],
+    },
+    apis: ['./routes/user.js', './routes/subject.js', './routes/event.js'],
+};
+  
+const specs = swaggerJsdoc(options);
+app.use(
+    "/api-docs",
+    swaggerUi.serve,
+    swaggerUi.setup(specs, {
+        customCss: '.swagger-ui .topbar { display: none }',
+        customSiteTitle: "UM Calendar API",
+        customfavIcon: "/um_icon.ico"
+    })
+);
 
 // Routers
 app.use('/user', userRouter);

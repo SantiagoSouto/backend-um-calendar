@@ -14,13 +14,13 @@ exports.postSignUp = (req, res, next) => {
     // Verify user has UM email syntax
     const emailRegex = /[a-zA-Z0-9]+@((correo.)?(um.))+edu.uy/;
     if (!emailRegex.test(newUser.email)) {
-        return res.status(400).send('Ese email no pertenece a la UM.');
+        return res.status(412).send('Ese email no pertenece a la UM.');
     }
 
     // Verify user does not exists in database
     User.findOne({email: req.body.email}).then(userExists => {
         if (userExists) {
-            return res.status(400).send('Ese email esta registrado.');
+            return res.status(409).send('Ese email esta registrado.');
         }
         newUser.save().then(() => {
             req.logIn(newUser, (err) => {

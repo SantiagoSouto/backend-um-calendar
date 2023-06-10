@@ -11,7 +11,7 @@ exports.postCreateSubject = (req, res, next) => {
     // Verify subject does not exists in database
     Subject.findOne({name: req.body.name}).then(subjectExists => {
         if (subjectExists) {
-            return res.status(400).send('Esa materia esta registrada.');
+            return res.status(409).send('Esa materia esta registrada.');
         }
         newSubject.save().then(() => {
             res.send('Materia creada exitosamente');
