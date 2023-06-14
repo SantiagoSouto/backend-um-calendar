@@ -70,4 +70,27 @@ const eventController = require('../controllers/event');
  */
 router.post('/', eventController.postCreateEvent);
 
+/**
+ * @swagger
+ * /event/all:
+ *   get:
+ *     summary: Obtener todos los eventos.
+ *     tags: [Event]
+ *     responses:
+ *       200:
+ *         description: Array con los eventos en formato JSON.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: Array
+ *               items: 
+ *                  $ref: '#/components/schemas/Event'
+ *       404:
+ *         description: No se encontraron los eventos.
+ *       500:
+ *         description: Error inesperado.
+ *
+ */
+router.get('/all', eventController.getAllEvents);
+
 module.exports = router;

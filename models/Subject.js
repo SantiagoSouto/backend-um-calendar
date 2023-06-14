@@ -10,4 +10,13 @@ const subjectSchema = new Schema({
     timestamps: true
 })
 
+subjectSchema.pre('save', function(next) {
+    const subject = this;
+    if (subject.year < 0 || subject.year > 5) {
+        const err = new Error('El año es no se encuentra entre 1 y 5.');
+        return next(err)
+    }
+    next()
+})
+
 module.exports = mongoose.model('Subject', subjectSchema);

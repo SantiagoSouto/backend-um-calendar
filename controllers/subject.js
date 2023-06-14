@@ -1,7 +1,7 @@
 const Subject = require('../models/Subject');
 const Event = require('../models/Event');
 
-exports.postCreateSubject = (req, res, next) => {
+exports.postCreateSubject = (req, res) => {
     const newSubject = new Subject({
         name: req.body.name,
         career: req.body.career,
@@ -15,7 +15,7 @@ exports.postCreateSubject = (req, res, next) => {
         }
         newSubject.save().then(() => {
             res.send('Materia creada exitosamente');
-        }).catch((err) => next(err));
+        }).catch((err) => res.status(400).send(`Ocurrio un error al guardar en la base de datos: ${err}`));
     }).catch(err => res.send(500).send('Ocurrio un problema inesperado.'))
 }
 
