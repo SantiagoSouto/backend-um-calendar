@@ -29,6 +29,18 @@ exports.getByName = (req, res) => {
     }).catch(err => res.status(500).send('Ocurrio un error.'));
 }
 
+exports.getAllSubjects = (req, res) => {
+    Subject.find({})
+    .then(subjects => {
+        if (subjects != null) {
+            res.send(subjects)
+        } else {
+            res.status(404).send('No se encontraron materias.');
+        }
+    })
+    .catch(err => res.status(500).send('Ocurrio un error.'));
+}
+
 exports.getAllEvents = (req, res) => {
     const events = [];
     Subject.findOne({name: req.params.name})

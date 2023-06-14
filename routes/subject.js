@@ -39,6 +39,29 @@ const subjectController = require('../controllers/subject');
 
 /**
  * @swagger
+ * /subject/all:
+ *   get:
+ *     summary: Obtener todas las materias.
+ *     tags: [Subject]
+ *     responses:
+ *       200:
+ *         description: Array con las materias en formato JSON.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: Array
+ *               items: 
+ *                  $ref: '#/components/schemas/Subject'
+ *       404:
+ *         description: No se encontraron las materias.
+ *       500:
+ *         description: Error inesperado.
+ *
+ */
+router.get('/all', subjectController.getAllSubjects);
+
+/**
+ * @swagger
  * /subject/{name}:
  *   get:
  *     summary: Obtener información de una materia.
