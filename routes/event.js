@@ -72,13 +72,13 @@ router.post('/', eventController.postCreateEvent);
 
 /**
  * @swagger
- * /event/all:
+ * /event/approved:
  *   get:
- *     summary: Obtener todos los eventos.
+ *     summary: Obtener todos los eventos aprobados.
  *     tags: [Event]
  *     responses:
  *       200:
- *         description: Array con los eventos en formato JSON.
+ *         description: Array con los eventos aprobados en formato JSON.
  *         content:
  *           application/json:
  *             schema:
@@ -91,6 +91,29 @@ router.post('/', eventController.postCreateEvent);
  *         description: Error inesperado.
  *
  */
-router.get('/all', eventController.getAllEvents);
+router.get('/approved', eventController.getApprovedEvents);
+
+/**
+ * @swagger
+ * /event/pending:
+ *   get:
+ *     summary: Obtener todos los eventos pendientes.
+ *     tags: [Event]
+ *     responses:
+ *       200:
+ *         description: Array con los eventos pendientes en formato JSON.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: Array
+ *               items: 
+ *                  $ref: '#/components/schemas/Event'
+ *       404:
+ *         description: No se encontraron los eventos.
+ *       500:
+ *         description: Error inesperado.
+ *
+ */
+router.get('/pending', eventController.getPendingEvents);
 
 module.exports = router;
