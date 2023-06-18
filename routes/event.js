@@ -53,7 +53,35 @@ const eventController = require('../controllers/event');
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Event'
+ *               type: object
+ *               required:
+ *                  - name
+ *                  - date
+ *                  - time
+ *                  - eventType
+ *                  - subject
+ *               properties:
+ *                  name:
+ *                      description: Nombre del evento
+ *                      type: String
+ *                  date:
+ *                      description: Fecha del evento (YYYY-MM-DD).
+ *                      type: String
+ *                      format: date
+ *                  time:
+ *                      description: Hora del evento (HH:MM).
+ *                      type: String
+ *                      format: date
+ *                  eventType:
+ *                      description: Tipo de evento.
+ *                      type: String
+ *                      enum: [parcial, entrega, obligatorio, recuperacion]
+ *                  subject:
+ *                      description: Nombre de la materia asociada.
+ *                      type: String
+ *                  approved:
+ *                      description: Evento validado por un administrador.
+ *                      type: Boolean
  *     responses:
  *       200:
  *         description: El evento se creó correctamente.
