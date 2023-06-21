@@ -4,8 +4,8 @@ const Subject = require('../models/Subject');
 exports.postCreateEvent = ((req, res, next) => {
 
     const subjectName = req.body.subject;
-    // Date: YYYY-MM-DDTHH:MM:SS-03:00
-    const date = new Date(`${req.body.date}T${req.body.time}:00-03:00`);
+    // Date: YYYY-MM-DDTHH:MM:SS
+    const date = new Date(`${req.body.date}T${req.body.time}:00`);
 
     // Verify subject exists
     Subject.findOne({name: subjectName}).then(subject => {
