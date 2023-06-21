@@ -29,6 +29,16 @@ exports.getByName = (req, res) => {
     }).catch(err => res.status(500).send('Ocurrio un error.'));
 }
 
+exports.getByName = (req, res) => {
+    Subject.findById(req.params.id).then(subject => {
+        if (subject != null) {
+            res.json(subject);
+        } else {
+            res.status(404).send(`No se encontro la materia: ${req.params.id}`);
+        }
+    }).catch(err => res.status(500).send('Ocurrio un error.'));
+}
+
 exports.getAllSubjects = (req, res) => {
     Subject.find({})
     .then(subjects => {

@@ -84,6 +84,8 @@ router.get('/all', subjectController.getAllSubjects);
  */
 router.get('/:name', subjectController.getByName);
 
+router.get('/:id', subjectController.getById);
+
 /**
  * @swagger
  * /subject/{name}/events:
