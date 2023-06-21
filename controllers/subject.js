@@ -29,7 +29,7 @@ exports.getByName = (req, res) => {
     }).catch(err => res.status(500).send('Ocurrio un error.'));
 }
 
-exports.getByName = (req, res) => {
+exports.getById = (req, res) => {
     Subject.findById(req.params.id).then(subject => {
         if (subject != null) {
             res.json(subject);
