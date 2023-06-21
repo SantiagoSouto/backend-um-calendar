@@ -95,7 +95,7 @@ exports.updateEvent = (req, res) => {
         Event.findByIdAndUpdate(req.body._id, req.body)
         .then((doc) => {
             if (doc != null) {
-                res.status(500).send('Ocurrio un error.')
+                res.send('Evento actualizado')
             } else {
                 res.status(400).send(`Ocurrio un error actualizando el evento`);
             }
