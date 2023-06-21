@@ -144,4 +144,6 @@ router.get('/approved', eventController.getApprovedEvents);
  */
 router.get('/pending', eventController.getPendingEvents);
 
+router.put('/', eventController.updateEvent);
+
 module.exports = router;
