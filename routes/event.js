@@ -146,4 +146,6 @@ router.get('/pending', eventController.getPendingEvents);
 
 router.put('/', eventController.updateEvent);
 
+router.delete('/', eventController.deleteEvent);
+
 module.exports = router;
