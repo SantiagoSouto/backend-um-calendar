@@ -148,4 +148,6 @@ router.put('/', eventController.updateEvent);
 
 router.delete('/', eventController.deleteEvent);
 
+router.get('/all', eventController.getAllEvents);
+
 module.exports = router;

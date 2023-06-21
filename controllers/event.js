@@ -34,6 +34,18 @@ exports.postCreateEvent = ((req, res, next) => {
     }).catch(err => res.send(500).send('Ocurrio un problema inesperado.'));
 });
 
+exports.getAllEvents = (req, res) => {
+    Event.find({})
+    .then(events => {
+        if (events != null) {
+            res.send(events)
+        } else {
+            res.status(404).send('No se encontraron eventos.');
+        }
+    })
+    .catch(err => res.status(500).send('Ocurrio un error.'));
+}
+
 exports.getApprovedEvents = (req, res) => {
     Event.find({approved: true})
     .then(events => {
