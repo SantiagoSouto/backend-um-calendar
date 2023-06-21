@@ -84,7 +84,7 @@ router.get('/all', subjectController.getAllSubjects);
  */
 router.get('/:name', subjectController.getByName);
 
-router.get('/:id', subjectController.getById);
+router.get('/id/:id', subjectController.getById);
 
 /**
  * @swagger
