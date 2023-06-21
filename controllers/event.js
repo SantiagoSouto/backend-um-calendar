@@ -16,19 +16,20 @@ exports.postCreateEvent = ((req, res, next) => {
         Event.findOne({date: date, eventType: req.body.type, subject: subject._id}).then(eventExists => {
             if (eventExists) {
                 res.status(409).send('Esta materia ya tiene este evento agregado')
+            } else {
+                const newEvent = new Event({
+                    name: req.body.name,
+                    date: date,
+                    eventType: req.body.type,
+                    subject: subject._id
+                });
+                // Save event
+                newEvent.save().then((event) => {
+                    subject.events = [...subject.events, event._id];
+                    subject.save();
+                    res.send('Evento creado exitosamente')
+                }).catch((err) => next(err));
             }
-            const newEvent = new Event({
-                name: req.body.name,
-                date: date,
-                eventType: req.body.type,
-                subject: subject._id
-            });
-            // Save event
-            newEvent.save().then((event) => {
-                subject.events = [...subject.events, event._id];
-                subject.save();
-                res.send('Evento creado exitosamente')
-            }).catch((err) => next(err));
         }).catch(err => res.send(500).send('Ocurrio un problema inesperado.'))
     }).catch(err => res.send(500).send('Ocurrio un problema inesperado.'));
 });
@@ -58,12 +59,20 @@ exports.getPendingEvents = (req, res) => {
 }
 
 exports.updateEvent = (req, res) => {
-    Event.findByIdAndUpdate(req.body._id, req.body)
-    .then((doc) => {
-        if (doc != null) {
-            res.send('Evento actualizado');
+    const newEvent = req.body;
+    Subject.findOne({name: newEvent.subject}).then(subject => {
+        if (subject === null) {
+            res.status(404).send(`${newEvent.subject} no se ingreso como materia al sistema.`);
         } else {
-            res.status(400).send(`Ocurrio un error actualizando el evento`);
+            newEvent.subject = subject._id;
+            Event.findByIdAndUpdate(req.body._id, req.body)
+            .then((doc) => {
+                if (doc != null) {
+                    res.send('Evento actualizado');
+                } else {
+                    res.status(400).send(`Ocurrio un error actualizando el evento`);
+                }
+            });
         }
-    })
+    });
 }
