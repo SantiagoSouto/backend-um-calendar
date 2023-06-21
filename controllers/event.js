@@ -60,36 +60,47 @@ exports.getPendingEvents = (req, res) => {
 
 exports.updateEvent = (req, res) => {
     const newEvent = req.body;
-    Event.findById(req.body._id)
-    .then(oldEvent => {
-        const oldSubject = oldEvent.subject;
-        Subject.findById(oldSubject)
-        .then(subject => {
-            subject.events = subject.events.filter(event =>  event != req.body._id);
-            subject.save();
+    if (newEvent.subject) {
+        Event.findById(req.body._id)
+        .then(oldEvent => {
+            const oldSubject = oldEvent.subject;
+            Subject.findById(oldSubject)
+            .then(subject => {
+                subject.events = subject.events.filter(event =>  event != req.body._id);
+                subject.save();
+            })
+            .catch(err => res.status(500).send('Ocurrio un error.'))
         })
-        .catch(err => res.status(500).send('Ocurrio un error.'))
-    })
-    .then(() => {
-        Subject.findOne({name: newEvent.subject}).then(subject => {
-            if (subject === null) {
-                res.status(404).send(`${newEvent.subject} no se ingreso como materia al sistema.`);
+        .then(() => {
+            Subject.findOne({name: newEvent.subject}).then(subject => {
+                if (subject === null) {
+                    res.status(404).send(`${newEvent.subject} no se ingreso como materia al sistema.`);
+                } else {
+                    newEvent.subject = subject._id;
+                    Event.findByIdAndUpdate(req.body._id, req.body)
+                    .then((doc) => {
+                        if (doc != null) {
+                            subject.events = [...subject.events, req.body._id]
+                            subject.save()
+                                .then(() => res.send('Evento actualizado'))
+                                .catch(err => res.status(500).send('Ocurrio un error.'))
+                        } else {
+                            res.status(400).send(`Ocurrio un error actualizando el evento`);
+                        }
+                    }).catch(err => res.status(500).send('Ocurrio un error.'));
+                }
+            }).catch(err => res.status(500).send('Ocurrio un error.'));
+        })
+    } else {
+        Event.findByIdAndUpdate(req.body._id, req.body)
+        .then((doc) => {
+            if (doc != null) {
+                res.status(500).send('Ocurrio un error.')
             } else {
-                newEvent.subject = subject._id;
-                Event.findByIdAndUpdate(req.body._id, req.body)
-                .then((doc) => {
-                    if (doc != null) {
-                        subject.events = [...subject.events, req.body._id]
-                        subject.save()
-                            .then(() => res.send('Evento actualizado'))
-                            .catch(err => res.status(500).send('Ocurrio un error.'))
-                    } else {
-                        res.status(400).send(`Ocurrio un error actualizando el evento`);
-                    }
-                }).catch(err => res.status(500).send('Ocurrio un error.'));
+                res.status(400).send(`Ocurrio un error actualizando el evento`);
             }
         }).catch(err => res.status(500).send('Ocurrio un error.'));
-    })
+    }
 }
 
 exports.deleteEvent = (req, res) => {
